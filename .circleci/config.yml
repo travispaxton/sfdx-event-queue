@@ -45,5 +45,6 @@ jobs:
       - run:
           name: Delete Useless Scratch Org
           command: |
+            set +e
             sfdx force:org:delete -u circle_build_$CIRCLE_BUILD_NUM -p
           when: always
