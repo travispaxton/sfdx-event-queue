@@ -27,7 +27,7 @@ private class EventProcessorTest {
             for (EventQueue__c event : events) {
                 recordsToUpsert.add(new Account()); // This should cause a caught DML exception
             }
-            EventQueue.upsertRecords(recordsToUpsert, events, Account.SObjectType, Account.Fields.AccountId__c);
+            EventQueue.upsertRecords(recordsToUpsert, events, Account.SObjectType, Account.Fields.Id);
         }
 
     }
@@ -167,46 +167,6 @@ private class EventProcessorTest {
             iterable.next();
         }
         System.assertEquals(4, count, 'Expected 4 batches');
-    }
-
-    static testMethod void testAccountEventProcessor() {
-        EventQueueType__mdt metadataType = EventQueue.getMetadataByType('ACCOUNT');
-        Integer batchSize = metadataType.BatchSize__c.intValue();
-        List<EventQueue__c> events = new List<EventQueue__c>();
-        for (Integer i = 1; i <= batchSize; i++) {
-            events.add(new EventQueue__c(Name='ACCOUNT', Payload__c=String.format('\'{\' "id": {0} \'}\'', new List<String>{ String.valueOf(i) })));
-        }
-        insert events;
-        insert new Account(Name='ACCOUNT_1', AccountId__c='ACCOUNT_1');
-        Test.startTest();
-        Database.executeBatch(new EventQueueBatch(0), 1);
-        Test.stopTest();
-        events = [SELECT Name, Key__c, Payload__c FROM EventQueue__c];
-        for (EventQueue__c event : events) {
-            Map<String, Object> payload = (Map<String, Object>) JSON.deserializeUntyped(event.Payload__c);
-            System.assertEquals('ACCOUNT_' + payload.get('id'), event.Key__c, 'Key__c wasn\'t populated correctly');
-        }
-    }
-
-    static testMethod void testContactEventProcessor() {
-        EventQueueType__mdt metadataType = EventQueue.getMetadataByType('CONTACT');
-        Integer batchSize = metadataType.BatchSize__c.intValue();
-        List<EventQueue__c> events = new List<EventQueue__c>();
-        List<Account> accounts = new List<Account>();
-        for (Integer i = 1; i <= batchSize; i++) {
-            events.add(new EventQueue__c(Name='CONTACT', Payload__c=String.format('\'{\' "id": {0}, "account_id": {0} \'}\'', new List<String>{ String.valueOf(i) })));
-            accounts.add(new Account(Name='ACCOUNT_' + String.valueOf(i), AccountId__c='ACCOUNT_' + String.valueOf(i)));
-        }
-        insert events;
-        insert accounts;
-        Test.startTest();
-        Database.executeBatch(new EventQueueBatch(0), 1);
-        Test.stopTest();
-        events = [SELECT Name, Key__c, Payload__c FROM EventQueue__c];
-        for (EventQueue__c event : events) {
-            Map<String, Object> payload = (Map<String, Object>) JSON.deserializeUntyped(event.Payload__c);
-            System.assertEquals('CONTACT_' + payload.get('id'), event.Key__c, 'Key__c wasn\'t populated correctly');
-        }
     }
 
 }
