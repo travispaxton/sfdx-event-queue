@@ -153,11 +153,12 @@ private class EventProcessorTest {
     }
 
     static testMethod void testEventQueueIterable() {
-        EventQueueType__mdt metadataType = EventQueue.getMetadataByType('ACCOUNT');
+        EventQueue.setMetadataByType('TEST', new EventQueueType__mdt(DeveloperName='TEST', BatchSize__c=1, ClassName__c='EventProcessorTest.TestEventProcessor'));
+        EventQueueType__mdt metadataType = EventQueue.getMetadataByType('TEST');
         Integer batchSize = metadataType.BatchSize__c.intValue();
         List<EventQueue__c> events = new List<EventQueue__c>();
         for (Integer i = 1; i <= batchSize * 3 + 1; i++) {
-            events.add(new EventQueue__c(Name='ACCOUNT', Payload__c=String.format('\'{\' "id": {0} \'}\'', new List<String>{ String.valueOf(i) })));
+            events.add(new EventQueue__c(Name='TEST', Payload__c=String.format('\'{\' "id": {0} \'}\'', new List<String>{ String.valueOf(i) })));
         }
         insert events;
         EventQueueIterable iterable = new EventQueueIterable();
