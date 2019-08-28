@@ -15,7 +15,6 @@ private class EventProcessorTest {
 
     }
 
-
     public class TestErrorHandling implements EventQueue.Processor {
 
         public String setKey(Map<String, Object> payload) {
@@ -142,9 +141,6 @@ private class EventProcessorTest {
         for (AggregateResult queuedEvent : [SELECT Key__c, MAX(Id) Id FROM EventQueue__c WHERE Status__c = 'Queued' AND NextAttempt__c <= :Datetime.now() GROUP BY Key__c ORDER BY MIN(NextAttempt__c), MIN(Id) ASC LIMIT 1000]) {
             queuedEvents.put((String) queuedEvent.get('Key__c'), (Id) queuedEvent.get('Id'));
         }
-        System.debug(queuedEvents);
-        System.debug([SELECT Id, CreatedDate, LastModifiedDate, NextAttempt__c FROM EventQueue__c]);
-
         Test.startTest();
         Database.executeBatch(new EventQueueBatch(0), 1);
         Test.stopTest();

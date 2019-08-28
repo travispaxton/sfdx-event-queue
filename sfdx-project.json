@@ -1,11 +1,22 @@
 {
-  "packageDirectories": [
-    {
-      "path": "force-app",
-      "default": true
+    "packageDirectories": [
+        {
+            "path": "force-app",
+            "default": true,
+            "package": "Data Platform Events",
+            "versionName": "ver 0.1",
+            "versionNumber": "0.1.0.NEXT"
+        }
+    ],
+    "namespace": "",
+    "sfdcLoginUrl": "https://login.salesforce.com",
+    "sourceApiVersion": "46.0",
+    "packageAliases": {
+        "Data Platform Events": "0Ho1U000000blVASAY",
+        "Data Platform Events@0.1.0-1": "04t1U000007PbYIQA0",
+        "Data Platform Events@0.1.0-2": "04t1U000007PbYNQA0",
+        "Data Platform Events@0.1.0-3": "04t1U000007PbYSQA0",
+        "Data Platform Events@0.1.0-4": "04t1U000007PbYXQA0",
+        "Data Platform Events@0.1.0-5": "04t1U000007PbYcQAK"
     }
-  ],
-  "namespace": "",
-  "sfdcLoginUrl": "https://login.salesforce.com",
-  "sourceApiVersion": "46.0"
 }
